@@ -4,7 +4,16 @@ const crypto = require("crypto");
 const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
 
+//#region  Config
 const MaxFileSize = (3*1024*1024); //3MB
+
+const allowedMimes = [
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/gif"
+];
+//#endregion
 
 const storageTypes = {
     local: multer.diskStorage({
@@ -44,14 +53,7 @@ const storageTypes = {
     limits: {
       fileSize: MaxFileSize
     },
-    fileFilter: (req, file, cb) => {
-      const allowedMimes = [
-        "image/jpeg",
-        "image/pjpeg",
-        "image/png",
-        "image/gif"
-      ];
-  
+    fileFilter: (req, file, cb) => {  
       if (allowedMimes.includes(file.mimetype)) {
         cb(null, true);
       } else {
